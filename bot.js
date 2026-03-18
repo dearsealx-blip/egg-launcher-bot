@@ -95,6 +95,36 @@ bot.on('new_chat_members', async (ctx) => {
   ).catch(() => {});
 });
 
+
+bot.command('portfolio', async (ctx) => {
+  try {
+    const user = ctx.from;
+    const [walletRes, tokensRes] = await Promise.all([
+      fetch(`${API_URL}/api/wallet/${user.id}?username=${user.username || ''}`),
+      fetch(`${API_URL}/api/tokens`),
+    ]);
+    const wallet = await walletRes.json();
+    const tokensData = await tokensRes.json();
+    const myTokens = (tokensData || []).filter(t => t.creator_tg_id === user.id);
+
+    let msg = `💼 *Your Portfolio*\n\n`;
+    msg += `Wallet: \`${wallet.address}\`\n`;
+    msg += `Balance: *${parseFloat(wallet.balance || 0).toFixed(4)} TON*\n\n`;
+
+    if (myTokens.length > 0) {
+      msg += `*Your Tokens:*\n`;
+      myTokens.forEach(t => {
+        msg += `• ${t.ticker} — ${(t.real_ton || 0).toFixed(2)} TON raised (${(t.progress || 0).toFixed(1)}%)\n`;
+      });
+    } else {
+      msg += `_No tokens launched yet._`;
+    }
+
+    await ctx.reply(msg, { parse_mode: 'Markdown', ...openBtn });
+  } catch (e) {
+    ctx.reply('Error loading portfolio.', openBtn);
+  }
+});
 bot.launch();
 console.log('ðŸ¥š Egg Launcher bot running...');
 process.once('SIGINT', () => bot.stop('SIGINT'));
