@@ -12,22 +12,15 @@ const openBtn = Markup.inlineKeyboard([
 ]);
 
 bot.start(async (ctx) => {
-  await ctx.replyWithPhoto(
-    { url: 'https://i.imgur.com/placeholder.png' },
-    {
-      caption: `*🥚 Egg Launcher*\n\nThe living launchpad on TON.\n\n` +
-        `• Launch a token in 60 seconds\n` +
-        `• Bonding curve AMM — no rug\n` +
-        `• 0.2% creator fees forever\n` +
-        `• Graduates to DeDust or STON.fi at 500 TON\n\n` +
-        `_1 TON launch fee_`,
-      parse_mode: 'Markdown',
-      ...openBtn,
-    }
-  ).catch(() => ctx.reply(
-    `🥚 *Egg Launcher*\n\nThe living launchpad on TON.`,
-    { parse_mode: 'Markdown', ...openBtn }
-  ));
+  await ctx.reply(
+    `🥚 *Egg Launcher*\n\nThe living launchpad on TON.\n\n` +
+    `• Launch a token in 60 seconds\n` +
+    `• Bonding curve — no rug possible\n` +
+    `• 0.2% creator fees on every trade\n` +
+    `• Graduates to DeDust or STON\\.fi at 500 TON\n\n` +
+    `_1 TON to launch\\. Earn forever\\._`,
+    { parse_mode: 'MarkdownV2', ...openBtn }
+  );
 });
 
 bot.command('launch',    ctx => ctx.reply('🚀 Ready to launch?', openBtn));
